@@ -1,10 +1,27 @@
-<p style="color: green"><%= notice %></p>
+<div class="container">
+<h2 class="text-center font-italic"><%= @article.title %></h2>
+<p class="alert alert-success"><%= notice %></p>
 
-<%= render @article %>
+<div class="row justify-content-md-center">
+  <div class="col-8 mt-4">
+<div class="card shadow mb-5 bg-white rounded">
+<div class="card-header text-center" style="font-style: italic">
+by Dat Luong</div>
+<div class="card-body">
+  <div class="card-text text-left"><%= simple_format(@article.description) %></div>
+  <div class="text-center">
+  <%= link_to "Edit", edit_article_path(@article), class: "btn btn-primary" %>
+  <%= link_to "Delete", article_path(@article), data: {
+    "turbo-method": :delete
+   }, class: "btn btn-danger" %></a>
+   </div>
+</div>
+<div class="card-footer text-muted text-center font-italic">
+  <small>Created <%= time_ago_in_words(@article.created_at) %></small> ago,
+  edited <%= time_ago_in_words(@article.updated_at)%> ago
+</div>
+</div>
+</div>
+</div>
 
-<div>
-  <%= link_to "Edit this article", edit_article_path(@article) %> |
-  <%= link_to "Back to articles", articles_path %>
-
-  <%= button_to "Destroy this article", @article, method: :delete %>
 </div>
