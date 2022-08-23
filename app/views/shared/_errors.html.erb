@@ -1,8 +1,8 @@
-<% if @article.errors.any? %>
+<% if obj.errors.any? %>
 <div class="alert alert-danger" role="alert">
-    <strong><%= pluralize(@article.errors.count, "error") %></strong> prohibited this article from being saved:
+    <strong><%= pluralize(obj.errors.count, "error") %></strong> prohibited this <%= obj.class.name.downcase %> from being saved:
     <ul>
-        <% @article.errors.each do |error| %>
+        <% obj.errors.each do |error| %>
         <li><%= error.full_message %></li>
         <% end %>
     </ul>
