@@ -4,7 +4,6 @@ class UsersController < ApplicationController
     end
 
     def edit
-
         @user = User.find(params[:id])
     end
 
@@ -13,8 +12,7 @@ class UsersController < ApplicationController
 
         respond_to do |format|
             if @user.update(user_params)
-                flash[:notice] = "Your Account information was successfully updated"
-            redirect_to articles_path
+                format.html { redirect_to @user, notice: "Your account was successfully updated" }
             else
                 format.html { render :new, status: :unprocessable_entity }
                 format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -37,7 +35,14 @@ class UsersController < ApplicationController
         end
     end
 
-    
+    def show
+        @user = User.find(params[:id])
+        @articles = @user.articles
+    end
+
+    def index
+        @users = User.paginate(page: params[:page], per_page: 5)
+    end
 
     private
     def user_params
