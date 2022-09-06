@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: [:show, :edit, :update]
+    before_action :set_user, only: [:show, :edit, :update, :destroy]
     before_action :require_user, only: [:edit, :update]
-    before_action :require_same_user, only: [:edit, :update]
+    before_action :require_same_user, only: [:edit, :update, :destroy]
     def new
         @user = User.new
     end
@@ -11,8 +11,6 @@ class UsersController < ApplicationController
     end
 
     def update
-
-
         respond_to do |format|
             if @user.update(user_params)
                 format.html { redirect_to @user, notice: "Your account was successfully updated" }
@@ -26,16 +24,16 @@ class UsersController < ApplicationController
     end
 
     def create
-
-        respond_to do |format|
-            if @user.save
-                session[:user_id] = @user.id
-                format.html { redirect_to articles_path, notice: "Welcome to the Alpha Blog you have successfully sign up" }
-            else
-                format.html { render :new, status: :unprocessable_entity }
-                format.json { render json: @user.errors, status: :unprocessable_entity }
-            end
+        @user = User.new(user_params)
+        if @user.save
+            session[:user_id] = @user.id
+            flash[:notice] = "Welcome to the Alpha Blog you have successfully sign up"
+            redirect_to articles_path
+        else
+            flash[:alert] = "Problem with your account"
+            redirect_to signup_path
         end
+        
     end
 
     def show
@@ -46,6 +44,13 @@ class UsersController < ApplicationController
         @users = User.paginate(page: params[:page], per_page: 5)
     end
 
+
+    def destroy
+        @user.destroy
+        session[:user_id] = nil
+        flash[:notice] = "Your account and all associated articles are deleted"
+        redirect_to root_path
+    end
     private
     def user_params
         params.require(:user).permit(:username, :email, :password)
